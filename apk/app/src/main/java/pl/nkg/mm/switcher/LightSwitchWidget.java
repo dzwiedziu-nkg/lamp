@@ -1,10 +1,17 @@
 package pl.nkg.mm.switcher;
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -32,8 +39,26 @@ public class LightSwitchWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
-            LightSwitchReceiver.sendCommand(context, LightSwitchWidget.state ? 0 : 1, appWidgetId);
             updateAppWidget(context, appWidgetManager, appWidgetId);
+
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_WIFI_STATE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED
+                    && ContextCompat.checkSelfPermission(context, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
+                String ssid = null;
+                ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                if (networkInfo.isConnected()) {
+                    final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+                    final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
+                    if (connectionInfo != null && !(connectionInfo.getSSID().equals(""))) {
+                        ssid = connectionInfo.getSSID();
+
+                        if (ssid != null && (ssid.equals("\"mm\"") || ssid.equals("mm"))) {
+                            LightSwitchReceiver.sendCommand(context, 9, appWidgetId);
+                        }
+                    }
+                }
+            }
         }
     }
 
