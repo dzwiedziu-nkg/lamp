@@ -21,7 +21,7 @@ public class LightSwitch implements Runnable {
     public void run() {
         URL url = null;
         try {
-            url = new URL("http://192.168.2.200/?pin=13");
+            url = new URL("http://192.168.0.24/?pin=13");
         } catch (MalformedURLException e) {
             throw new RuntimeException();
         }

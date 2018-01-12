@@ -97,7 +97,7 @@ public class LightSwitchReceiver extends BroadcastReceiver {
 
             URL url = null;
             try {
-                url = new URL("http://192.168.2.200/?cmd=" + cmd);
+                url = new URL("http://192.168.0.24/?cmd=" + cmd);
             } catch (MalformedURLException e) {
                 throw new RuntimeException();
             }

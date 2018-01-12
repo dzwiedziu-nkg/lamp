@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
             URL url = null;
             try {
-                url = new URL("http://192.168.2.200/?cmd=" + cmd);
+                url = new URL("http://192.168.0.24/?cmd=" + cmd);
             } catch (MalformedURLException e) {
                 throw new RuntimeException();
             }
@@ -143,8 +143,8 @@ public class MainActivity extends AppCompatActivity {
             try {
                 String content = "cmd=" + cmd + "\r\n";
                 urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setConnectTimeout(4000);
-                urlConnection.setReadTimeout(4000);
+                urlConnection.setConnectTimeout(3000);
+                urlConnection.setReadTimeout(3000);
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setDoOutput(true);
                 urlConnection.setInstanceFollowRedirects(false);
